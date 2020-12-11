@@ -8,25 +8,30 @@ export default class Timer extends React.Component {
     };
   }
 
-  componentDidMount() {
+  startTimer() {
     this.handlerOfTimer = setInterval(() => this.timerAction(), 1000);
   }
 
   timerAction() {
-    this.setState({ counter: this.counter - 1 });
+    if (this.state.counter > 0) {
+      this.setState({ counter: this.state.counter - 1 });
+    } else {
+      this.stopTimer.bind(this);
+    }
   }
-  componentWillUnmount() {
+
+  stopTimer() {
     clearInterval(this.handlerOfTimer);
-    this.setState({ counter: 0});
+    this.setState({ counter: 0 });
   }
 
-  handlerSubmit = (e) => {
+  handlerSubmit = e => {
     e.preventDefault();
-  }
+  };
 
-  handlerChange = (e) => {
-    this.setState({counter: e.target.value});
-  }
+  handlerChange = e => {
+    this.setState({ counter: e.target.value });
+  };
 
   render() {
     return (
@@ -34,13 +39,19 @@ export default class Timer extends React.Component {
         <form onSubmit={this.handlerSubmit}>
           <input
             type="number"
-            value={this.counter}
+            value={this.state.counter}
             onChange={this.handlerChange}
           />
           <br />
-          <button type="submit" onClick={this.componentDidMount}>Start</button>
-          <button onClick={() => clearInterval(this.handlerOfTimer)}>Pause</button>
-          <button type="reset" onClick={this.componentWillUnmount}>Stop</button>
+          <button type="submit" onClick={this.startTimer.bind(this)}>
+            Start
+          </button>
+          <button onClick={() => clearInterval(this.handlerOfTimer)}>
+            Pause
+          </button>
+          <button type="reset" onClick={this.stopTimer.bind(this)}>
+            Stop
+          </button>
         </form>
       </div>
     );
